@@ -1,4 +1,4 @@
-]<div class="card p-4">
+<div class="card p-4">
   <h2 class="text-900 mb-4">Dynamic Flight Booking</h2>
 
   <form [formGroup]="bookingForm">
@@ -75,9 +75,58 @@
     <div class="flex justify-content-between mt-4">
       <button pButton label="Add Another Flight" icon="pi pi-plus" 
               class="p-button-secondary" (click)="addFlight()"></button>
-      
-      <button pButton label="Complete Booking" icon="pi pi-check" 
-              class="p-button-success" (click)="onSubmit()"></button>
+     
     </div>
   </form>
+
+
+ <div class="fixed bottom-0 left-0 w-full bg-white shadow-8 p-4 border-top-1 border-200 z-5">
+  <div class="container flex justify-content-between align-items-center" style="max-width: 1200px; margin: 0 auto;">
+    <div>
+      <span class="block text-600 font-medium text-sm">GRAND TOTAL</span>
+      <span class="text-3xl font-bold text-900">{{ (totalCost$ | async) || 0 | currency }}</span>
+    </div>
+    
+    <div class="flex gap-3">
+      <button pButton 
+              label="Complete Booking" 
+              icon="pi pi-check" 
+              class="p-button-success p-button-lg px-6" 
+              [disabled]="bookingForm.invalid"
+              (click)="onSubmit()">
+      </button>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="Confirm Your Booking" [(visible)]="displaySummary" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+    
+    <div *ngIf="summaryData as data">
+        <div class="surface-50 p-3 border-round mb-4">
+            <div class="flex justify-content-between mb-2">
+                <span class="text-700">Total Flights:</span>
+                <span class="font-bold">{{ data.totalFlights }}</span>
+            </div>
+            <div class="flex justify-content-between">
+                <span class="text-700">Total Passengers:</span>
+                <span class="font-bold">{{ data.totalPassengers }}</span>
+            </div>
+        </div>
+
+        <h4 class="mb-3">Itinerary Details</h4>
+        <div *ngFor="let f of data.flights; let last = last" class="mb-3">
+            <div class="flex align-items-center gap-3">
+                <i class="pi pi-send text-primary"></i>
+                <span class="font-medium">{{ f.fromCity }} ➔ {{ f.toCity }}</span>
+                <span class="text-600 ml-auto">{{ f.departureDate | date:'mediumDate' }}</span>
+            </div>
+            <p-divider *ngIf="!last"></p-divider>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton icon="pi pi-times" (click)="displaySummary=false" label="Cancel" class="p-button-text"></button>
+        <button pButton icon="pi pi-check" (click)="confirmFinalBooking()" label="Confirm & Pay" class="p-button-success" [loading]="isSubmitting"></button>
+    </ng-template>
+</p-dialog>
 </div>
