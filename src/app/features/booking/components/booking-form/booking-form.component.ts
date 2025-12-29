@@ -11,7 +11,11 @@ export class BookingFormComponent implements OnInit {
   private destroy$ = new Subject<void>();
   totalCost$!: Observable<number>;
 
+  displaySummary: boolean = false;
+
   bookingForm!: FormGroup;
+
+  isSubmitting: boolean = false;
 
   cities = [
     { label: 'New York', value: 'NYC' },
@@ -31,6 +35,18 @@ export class BookingFormComponent implements OnInit {
 
   getPassengers(flightIndex: number): FormArray {
     return this.flights.at(flightIndex).get('passengers') as FormArray;
+  }
+
+  get summaryData(){
+    const rawValue=this.bookingForm.getRawValue();
+    return {
+      totalFlights:rawValue.flights.length,
+      totalPassengers:rawValue.flights.reduce((accum:number,f:any)=>{
+        return accum+=f.passengers.length;
+      },0),
+      flights:rawValue.flights
+
+    }
   }
 
   constructor(private fb: FormBuilder) {}
@@ -111,7 +127,17 @@ export class BookingFormComponent implements OnInit {
   }
 
   onSubmit() {
+    //need to oper summury dialog here
+    if(this.bookingForm.valid){
+      this.displaySummary = true;
+    }
     console.log(this.bookingForm.value);
+  }
+
+  confirmFinalBooking(){
+    // 1. Start the loading state
+this.isSubmitting = true;
+
   }
 
   ngOnDestroy(): void {

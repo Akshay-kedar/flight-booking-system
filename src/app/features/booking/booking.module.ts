@@ -12,17 +12,21 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InputTextModule } from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
+import { DividerModule } from 'primeng/divider';
 @NgModule({
   declarations: [
     BookingFormComponent
   ],
   imports: [
     BookingRoutingModule,
-    ButtonModule,
     BrowserAnimationsModule,
+    ButtonModule,
     CalendarModule,
     CardModule,
     CommonModule,
+    DividerModule,
+    DialogModule,
     DropdownModule,
     InputNumberModule,
     InputTextModule,
