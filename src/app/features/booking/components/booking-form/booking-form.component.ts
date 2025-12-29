@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-booking-form',
   templateUrl: './booking-form.component.html',
   styleUrls: ['./booking-form.component.scss']
 })
 export class BookingFormComponent implements OnInit {
+
+  private  destroy$=new Subject<void>()
+
 bookingForm!:FormGroup
 cities = [
   { label: 'New York', value: 'NYC' },
@@ -52,17 +56,31 @@ getPassengers(flightIndex:number):FormArray{
 
   }
   initPassenger(): FormGroup {
-  return this.fb.group({
+  const group= this.fb.group({
     name: ['',Validators.required],
-    age: ['',Validators.required],
+    age: [null,Validators.required],
     gender: ['',Validators.required],
     baseFare:[500],//default base fare
     discountedFare:[500]//default discounted fare
   });
-  }
-  
 
-  addFlight() {
+  group.get('age')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(age=>{
+    
+    if(age===null||age===undefined){
+      return;
+    }
+    const baseFare=group.get('baseFare')?.value||0;
+    
+    const finalFare=age<12?baseFare*0.5:baseFare;
+   
+    group.get('discountedFare')?.patchValue(finalFare,{emitEvent:false});
+  })
+
+
+  return group;
+
+}
+addFlight() {
   this.flights.push(this.initFlight());
 }
 addPassenger(flightIndex: number) {
@@ -79,4 +97,11 @@ removeFlight(flightIndex: number) {
   onSubmit(){
     console.log(this.bookingForm.value);
   } 
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
