@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-booking-form',
   templateUrl: './booking-form.component.html',
@@ -37,19 +39,21 @@ export class BookingFormComponent implements OnInit {
     return this.flights.at(flightIndex).get('passengers') as FormArray;
   }
 
-  get summaryData(){
-    const rawValue=this.bookingForm.getRawValue();
+  get summaryData() {
+    const rawValue = this.bookingForm.getRawValue();
     return {
-      totalFlights:rawValue.flights.length,
-      totalPassengers:rawValue.flights.reduce((accum:number,f:any)=>{
-        return accum+=f.passengers.length;
-      },0),
-      flights:rawValue.flights
-
-    }
+      totalFlights: rawValue.flights.length,
+      totalPassengers: rawValue.flights.reduce((accum: number, f: any) => {
+        return (accum += f.passengers.length);
+      }, 0),
+      flights: rawValue.flights,
+    };
   }
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.bookingForm = this.fb.group({
@@ -128,16 +132,67 @@ export class BookingFormComponent implements OnInit {
 
   onSubmit() {
     //need to oper summury dialog here
-    if(this.bookingForm.valid){
+    if (this.bookingForm.valid) {
       this.displaySummary = true;
     }
     console.log(this.bookingForm.value);
   }
 
-  confirmFinalBooking(){
-    // 1. Start the loading state
-this.isSubmitting = true;
+  resetBookingForm() {
+    // 1. Clear the Flight FormArray
+    // We loop backwards or simply set a new FormArray
+    this.bookingForm.setControl('flights', this.fb.array([this.initFlight()]));
 
+    // 2. Reset the visual state of the form (removes 'touched' or 'dirty' classes)
+    this.bookingForm.reset();
+
+    // 3. IMPORTANT: After .reset(), all values become null.
+    // We need to patch the default structure back in.
+    this.bookingForm.patchValue({
+      flights: [
+        {
+          fromCity: '',
+          toCity: '',
+          passengers: [
+            {
+              baseFare: 500,
+              discountedFare: 500,
+            },
+          ],
+        },
+      ],
+    });
+  }
+
+  confirmFinalBooking() {
+    // 1. Start the loading state
+    this.isSubmitting = true;
+
+    // 2. Simulate an API call using RxJS
+    // We pipe a timer to wait 2 seconds, then execute our logic
+    timer(2000).subscribe({
+      next: () => {
+        // 3. Success! Stop the loading state
+        this.isSubmitting = false;
+        this.displaySummary = false;
+
+        // 4. Show a success notification
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Booking Confirmed',
+          icon: 'pi pi-check',
+          detail: 'Your flight has been successfully booked!',
+          styleClass: 'custom-success-message',
+        });
+
+        this.resetBookingForm();
+      },
+      error: (err) => {
+        // Handle errors (stop loading even if it fails)
+        this.isSubmitting = false;
+        console.error('Booking failed', err);
+      },
+    });
   }
 
   ngOnDestroy(): void {
