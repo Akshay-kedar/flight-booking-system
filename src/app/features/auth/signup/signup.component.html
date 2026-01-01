@@ -1,0 +1,81 @@
+<div
+  class="flex align-items-center justify-content-center min-h-screen surface-ground p-4"
+>
+  <div class="surface-card p-6 shadow-2 border-round w-full lg:w-30rem">
+    <div class="text-center mb-5">
+      <i class="pi pi-user-plus text-blue-600 text-5xl mb-3"></i>
+      <div class="text-900 text-3xl font-medium mb-2">Create an Account</div>
+      <span class="text-600">Join FlyHigh for exclusive flight deals</span>
+    </div>
+    <form [formGroup]="signupForm" (ngSubmit)="onSignup()" class="p-fluid">
+      <div class="field mb-4">
+        <label for="name" clas="block font-bold mb-2">Full Name</label>
+        <input
+          id="name"
+          type="text"
+          pInputText
+          formControlName="name"
+          class="w-full"
+        />
+      </div>
+
+      <div class="field mb-4">
+        <label for="email" class="block font-bold mb-2">Email</label>
+        <input
+          id="email"
+          type="email"
+          pInputText
+          formControlName="email"
+          placeholder="email@example.com"
+        />
+        <small
+          class="p-error"
+          **ngIf="
+            signupForm.get('email')?.invalid && signupForm.get('email')?.touched
+          "
+          >Enter a valid email address
+        </small>
+      </div>
+
+      <div class="field mb-4">
+        <label for="password" class="block font-bold mb-2">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [toggleMask]="true"
+          [feedback]="true"
+          placeholder="Minimum 6 characters"
+        >
+          <ng-template pTemplate="header">
+            <h6>Pick a password</h6>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <p-divider></p-divider>
+            <p class="mt-2">Suggestions</p>
+            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+              <li>At least one lowercase</li>
+              <li>At least one uppercase</li>
+              <li>Minimum 6 characters</li>
+            </ul>
+          </ng-template>
+        </p-password>
+      </div>
+
+      <button
+        pButton
+        label="Register"
+        icon="pi pi-check"
+        class="w-full mt-2"
+        [loading]="loading"
+      ></button>
+    </form>
+    <div class="mt-4 text-center">
+    <span class="text-600">Already have an account? </span>
+    <a
+      routerLink="/login"
+      class="text-blue-600 font-bold no-underline hover:underline cursor-pointer"
+      >Log In</a
+    >
+    </div>
+  </div>
+</div>

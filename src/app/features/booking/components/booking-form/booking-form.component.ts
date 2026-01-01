@@ -186,6 +186,8 @@ export class BookingFormComponent implements OnInit {
         });
 
         this.resetBookingForm();
+        this.displaySummary = false;
+        this.isSubmitting = false;
       },
       error: (err) => {
         // Handle errors (stop loading even if it fails)
