@@ -1,3 +1,102 @@
-<div class="flex flex-column md:flex-row h-screen" >
+<div
+  class="flex align-items-center justify-content-center min-h-screen surface-ground"
+>
+  <div class="surface-card p-6 shadow-2 border-round w-full lg:w-30rem">
+    <div class="text-center mb-5">
+      <i class="pi pi-lock text-blue-600 text-5xl mb-3"></i>
+      <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
+      <span class="text-600 font-medium line-height-3"
+        >Enter your credentials to access your flights.</span
+      >
+    </div>
 
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="p-fluid">
+      <div class="field mb-4">
+        <label for="email" class="block text-900 font-medium mb-2">Email</label>
+        <div class="p-input-icon-left">
+          <i class="pi pi-envelope"></i>
+          <input
+            id="email"
+            type="text"
+            pInputText
+            formControlName="email"
+            placeholder="Email address"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                loginForm.get('email')?.invalid &&
+                loginForm.get('email')?.touched
+            }"
+          />
+        </div>
+        <small
+          class="p-error"
+          *ngIf="
+            loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+          "
+        >
+          A valid email is required.
+        </small>
+      </div>
+
+      <div class="field mb-4">
+        <label for="password" class="block text-900 font-medium mb-2"
+          >Password</label
+        >
+        <p-password
+          id="password"
+          formControlName="password"
+          [toggleMask]="true"
+          [feedback]="false"
+          placeholder="Your password"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        ></p-password>
+        <small
+          class="p-error"
+          *ngIf="
+            loginForm.get('password')?.invalid &&
+            loginForm.get('password')?.touched
+          "
+        >
+          Password must be at least 6 characters.
+        </small>
+      </div>
+
+      <div class="flex align-items-center justify-content-between mb-5">
+        <div class="flex align-items-center">
+          <p-checkbox
+            id="remember"
+            formControlName="rememberMe"
+            [binary]="true"
+            class="mr-2"
+          ></p-checkbox>
+          <label for="remember">Remember me</label>
+        </div>
+        <a
+          class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer"
+          >Forgot password?</a
+        >
+      </div>
+
+      <button
+        pButton
+        label="Sign In"
+        icon="pi pi-sign-in"
+        type="submit"
+        [loading]="loading"
+        class="w-full p-button-lg"
+      ></button>
+    </form>
+
+    <div class="mt-4 text-center">
+      <span class="text-600">Don't have an account? </span>
+      <a
+        routerLink="/login/signup"
+        class="text-blue-600 font-bold no-underline hover:underline cursor-pointer"
+        >Sign Up</a
+      >
+    </div>
+  </div>
 </div>
+
+<p-toast></p-toast>

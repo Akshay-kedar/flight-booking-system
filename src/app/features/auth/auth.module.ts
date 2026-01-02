@@ -13,24 +13,27 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SignupComponent } from './signup/signup.component';
 import { LoginComponent } from './login/login.component';
-
+import { CheckboxModule } from 'primeng/checkbox';
 import { PasswordModule } from 'primeng/password';
+import { ToastModule } from 'primeng/toast';
 @NgModule({
-  declarations: [SignupComponent,LoginComponent],
+  declarations: [SignupComponent, LoginComponent],
   imports: [
     CommonModule,
     AuthRoutingModule,
-     ButtonModule,
-        CalendarModule,
-        CardModule,
-        DividerModule,
-        DialogModule,
-        DropdownModule,
-        PasswordModule,
-        InputNumberModule,
-        InputTextModule,
-        ReactiveFormsModule
+    ButtonModule,
+    CalendarModule,
+    CardModule,
+    CheckboxModule,
+    DividerModule,
+    DialogModule,
+    DropdownModule,
+    PasswordModule,
+    InputNumberModule,
+    InputTextModule,
+    ToastModule,
+    ReactiveFormsModule,
   ],
-  exports:[SignupComponent,LoginComponent]
+  exports: [SignupComponent, LoginComponent],
 })
-export class AuthModule { }
+export class AuthModule {}

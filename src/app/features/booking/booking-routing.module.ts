@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MessageService } from 'primeng/api';
-const routes: Routes = [];
+import { BookingFormComponent } from './components/booking-form/booking-form.component';
+
+const routes: Routes = [{ path: '', component: BookingFormComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [MessageService]
+  providers: [],
 })
-export class BookingRoutingModule { }
+export class BookingRoutingModule {}
