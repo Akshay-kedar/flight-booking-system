@@ -5,8 +5,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
+import { HeaderComponent } from './core/components/header/header.component';
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, HeaderComponent],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule],
   providers: [MessageService],
   bootstrap: [AppComponent],
